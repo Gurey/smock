@@ -2,6 +2,7 @@ package se.gurey.smock.api.serviceroutes;
 
 import static spark.Spark.*;
 
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import se.gurey.smock.api.db.RouteMap;
 import se.gurey.smock.api.entity.WebserviceEndpoint;
 import se.gurey.smock.api.entity.rule.ContainsRule;
 import se.gurey.smock.api.entity.rule.EndpointRule;
+import se.gurey.smock.api.entity.rule.EndpointRuleTypeAdapter;
 import se.gurey.smock.api.path.PathMatcher;
 import spark.Request;
 import spark.Response;
@@ -52,7 +54,12 @@ public class ServiceRoutes {
             WebserviceEndpoint endpoint = this.getEndpoint(req, res);
             if (endpoint != null) {
                 res.header("Content-Type", endpoint.getType());
-                halt(200, routeHandler.handleServiceRequest(endpoint, req, res));
+                String response = routeHandler.handleServiceRequest(endpoint, req, res);
+                if(response != null){
+                    halt(200, response);
+                } else {
+                    halt(404);
+                }
             }
         });
     }
@@ -72,7 +79,7 @@ public class ServiceRoutes {
     public void initSample() {
         after((req, res) -> res.header("Content-Type", "application/json"));
         get("/sample/webend", (req, res) -> new WebserviceEndpoint("/service"), gson::toJson);
-        get("/sample/rule", (req, res) -> new ContainsRule("contains", "res", false), gson::toJson);
+        get("/sample/rule", (req, res) -> new ContainsRule("contains",  new HashMap<String, String>(), false), gson::toJson);
     }
 
     public void initSmockApi() {
@@ -90,12 +97,16 @@ public class ServiceRoutes {
         post("/smock/api/routes/:routeid/rules", (req, res) -> {
             log.info("Setting new rule: " + req.body());
             WebserviceEndpoint route = this.getRouteById(req.params("routeid"));
-            ContainsRule rule = gson.fromJson(req.body(), ContainsRule.class);
+            EndpointRule rule = EndpointRuleTypeAdapter.getEndpointRule(req);
             if(route != null){
                 route.getRules().add(rule);
             }
             return "TADA!";
         });
+
+        get("/smock/api/routes/:routeid/rules", (req, res) -> {
+            return this.getRouteById(req.params("routeid")).getRules();
+        }, gson::toJson);
         
         
     }

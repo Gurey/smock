@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -33,15 +34,15 @@ public class XmlRuleTest {
     
     @Test
     public void getElement(){
-        XmlRule rule = new XmlRule("Working!", false, RuleType.XML);
-        rule.getPaths().put("//title", "Guava");
+        XmlRule rule = new XmlRule("Working!", new HashMap<>(), false);
+        rule.getConditions().put("//title", "Guava");
         assertTrue(rule.applyRule(req, res));
     }
     
     @Test
     public void getElementThatDontExist(){
-        XmlRule rule = new XmlRule("Working!", false, RuleType.XML);
-        rule.getPaths().put("//thisdonotexist", "will never get here");
+        XmlRule rule = new XmlRule("Working!", new HashMap<>(),false);
+        rule.getConditions().put("//thisdonotexist", "will never get here");
         assertFalse(rule.applyRule(req, res));
     }
     

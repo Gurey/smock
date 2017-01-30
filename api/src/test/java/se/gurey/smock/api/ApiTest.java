@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.stop;
 
+import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,8 +19,14 @@ import se.gurey.smock.api.db.RouteMap;
 import se.gurey.smock.api.entity.WebserviceEndpoint;
 import se.gurey.smock.api.entity.rule.ContainsRule;
 import se.gurey.smock.api.entity.rule.EndpointRule;
+import se.gurey.smock.api.entity.rule.JsonRule;
 import spark.Request;
 import spark.Response;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Unit test for simple App.
@@ -30,6 +37,7 @@ public class ApiTest {
     
    private static String BASE_URL = "http://localhost:8088";
    private static RouteMap routeMap;
+   private static final Gson g = new Gson();
    
    @BeforeClass
    public static void beforeCLass() {
@@ -111,8 +119,10 @@ public class ApiTest {
            .statusCode(200);
        
        String ruleUri = SMOCK_API_ROUTES + "/" + getWebServiceEndpoint().getId() + "/rules";
+       HashMap<String, String> conds = new HashMap<String, String>();
+       conds.put("containsrule", null);
        req()
-           .body(new ContainsRule("containsrule", "containsrule", false))
+           .body(new ContainsRule("containsrule", conds, false))
            .post(ruleUri)
        .then()
            .statusCode(200);
@@ -123,17 +133,69 @@ public class ApiTest {
        .then()
            .body(equalTo("containsrule"));
    }
+
+    @Test
+    public void testGetServiceRule() {
+        req()
+            .body(new WebserviceEndpoint("/ruleend"))
+            .post(SMOCK_API_ROUTES)
+            .then()
+            .statusCode(200);
+
+        String ruleUri = SMOCK_API_ROUTES + "/" + getWebServiceEndpoint().getId() + "/rules";
+        HashMap<String, String> containsConds = new HashMap<>();
+        containsConds.put("contains", "contains");
+        req()
+            .body(new ContainsRule("containsrule", containsConds, false))
+            .post(ruleUri)
+            .then()
+            .statusCode(200);
+
+        HashMap<String, String> jsonConds = new HashMap<>();
+        jsonConds.put("list[0]", "gurkan");
+        jsonConds.put("list[1]", "ghol");
+        req()
+            .body(new JsonRule("jsonrules", jsonConds, false))
+            .post(ruleUri)
+            .then()
+            .statusCode(200);
+
+        req()
+            .body("contains")
+            .get("/ruleend")
+            .then()
+            .body(equalTo("containsrule"));
+
+        String jsonPayload = g.toJson(new TestObject());
+        req()
+            .body(jsonPayload)
+            .get("/ruleend")
+            .then()
+            .body(equalTo("jsonrules"));
+
+        TestObject failJson = new TestObject();
+        failJson.list.set(1, "failfailfail");
+        jsonPayload = g.toJson(failJson);
+        req()
+            .body(jsonPayload)
+            .get("/ruleend")
+            .then()
+            .statusCode(404);
+    }
    
    public WebserviceEndpoint getWebServiceEndpoint() {
        return routeMap.values().stream().findFirst().get();
    }
    
    public void setDefaultRepsonse(){
-       getWebServiceEndpoint().getRules().add(new ContainsRule("nothing", "default response", true));
+       getWebServiceEndpoint().getRules().add(new ContainsRule("default response", new HashMap<>(), true));
    }
    
    private RequestSpecification req() {
        return given().baseUri(BASE_URL);
    }
-   
+
+   class TestObject{
+       public List list = Arrays.asList("gurkan", "ghol");
+   }
 }

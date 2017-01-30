@@ -20,17 +20,13 @@ import spark.Response;
 
 public class XmlRule extends EndpointRule {
     
-    private HashMap<String, String> paths;
-
-    public XmlRule(String response, boolean isDefault, RuleType ruleType) {
-        super(response, isDefault, ruleType);
-        this.paths = new HashMap<>();
+    public XmlRule(String response, HashMap<String, String> conditions, boolean isDefault) {
+        super(response, conditions, isDefault, RuleType.XML);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean applyRule(Request req, Response res) {
-        Set<Entry<String, String>> entries = paths.entrySet();
+        Set<Entry<String, String>> entries = getConditions().entrySet();
         for (Entry<String, String> entry : entries) {
             SAXReader sax = new SAXReader();
             try {
@@ -48,10 +44,6 @@ public class XmlRule extends EndpointRule {
             }
         }
         return true;
-    }
-
-    public HashMap<String, String> getPaths() {
-        return paths;
     }
 
 }

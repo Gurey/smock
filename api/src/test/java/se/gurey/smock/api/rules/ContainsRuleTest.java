@@ -13,6 +13,8 @@ import se.gurey.smock.api.entity.rule.ContainsRule;
 import spark.Request;
 import spark.Response;
 
+import java.util.HashMap;
+
 public class ContainsRuleTest {
 
     private static String SHOULD_CONTAIN = "containsThis";
@@ -23,7 +25,9 @@ public class ContainsRuleTest {
     
     @BeforeClass
     public static void beforeClass() {
-        rule = new ContainsRule(SHOULD_CONTAIN, "res", true);
+        HashMap<String, String> conds = new HashMap<>();
+        conds.put(SHOULD_CONTAIN, null);
+        rule = new ContainsRule(SHOULD_CONTAIN, conds, true);
     }
     
     @Before

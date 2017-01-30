@@ -9,6 +9,7 @@ public class ServiceRouteHandler {
     
     public String handleServiceRequest(WebserviceEndpoint endpoint, Request req, Response res) {
         System.out.println(endpoint.getRules().size() + " rule(s) found for " + endpoint.getPath());
+        endpoint.getRules().forEach(r -> System.out.println("Rule type: " + r.getRuleType()));
         EndpointRule rule = endpoint.getRules().stream().filter(r -> r.applyRule(req, res)).findFirst().orElse(null);
         if(rule != null){
             System.out.println("RULE EXISTS: Returning " + rule.getResponse());

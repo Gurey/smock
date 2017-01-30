@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Before;
@@ -20,7 +21,7 @@ import spark.Response;
 public class JsonRuleTest {
 
 	private Gson g = new Gson();
-	private JsonRule rule = new JsonRule("WORKING!", false, RuleType.JSON);
+	private JsonRule rule = new JsonRule("WORKING!", new HashMap<>() ,false);
 	private String json;
 	private Request req;
 	private Response res;
@@ -36,14 +37,14 @@ public class JsonRuleTest {
 	@Test
 	public void readJson(){
 		when(res.body()).thenReturn(json);
-		rule.getJsonPaths().put("name", "myname");
+		rule.getConditions().put("name", "myname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void readJsonList(){
 		when(res.body()).thenReturn(json);
-		rule.getJsonPaths().put("items[0].listname", "mylistname");
+		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
@@ -52,28 +53,28 @@ public class JsonRuleTest {
 		TestJson j = new TestJson();
 		j.items.add(new TestJsonListItem());
 		when(res.body()).thenReturn(g.toJson(j));
-		rule.getJsonPaths().put("items[0].listname", "mylistname");
+		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void readJsonTwoRules() {
 		when(res.body()).thenReturn(json);
-		rule.getJsonPaths().put("items[0].listamount", "1");
-		rule.getJsonPaths().put("items[0].listname", "mylistname");
+		rule.getConditions().put("items[0].listamount", "1");
+		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void readJsonWithBadPath() {
 		when(res.body()).thenReturn(json);
-		rule.getJsonPaths().put("fail", "wewillnevergethere");
+		rule.getConditions().put("fail", "wewillnevergethere");
 		assertFalse(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void gsonCanSerializeJsonRule(){
-		rule.getJsonPaths().put("name", "myname");
+		rule.getConditions().put("name", "myname");
 		String j = g.toJson(rule);
 		g.fromJson(j, JsonRule.class);
 	}
