@@ -7,3 +7,8 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.idea/
+api/api.iml
+smock.iml
+wsdl-reader/pom.xml wsdl-reader/src wsdl-reader/target wsdl-reader/wsdl-reader.iml
+wsdl-reader/wsdl-reader.iml
