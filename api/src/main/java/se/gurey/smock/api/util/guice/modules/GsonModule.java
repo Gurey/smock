@@ -6,6 +6,7 @@ public class GsonModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        
     }
 
 }
