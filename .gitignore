@@ -12,3 +12,4 @@ api/api.iml
 smock.iml
 wsdl-reader/pom.xml wsdl-reader/src wsdl-reader/target wsdl-reader/wsdl-reader.iml
 wsdl-reader/wsdl-reader.iml
+target/**
