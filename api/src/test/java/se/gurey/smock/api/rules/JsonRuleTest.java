@@ -36,14 +36,14 @@ public class JsonRuleTest {
 	
 	@Test
 	public void readJson(){
-		when(res.body()).thenReturn(json);
+		when(req.body()).thenReturn(json);
 		rule.getConditions().put("name", "myname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void readJsonList(){
-		when(res.body()).thenReturn(json);
+		when(req.body()).thenReturn(json);
 		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
 	}
@@ -52,14 +52,14 @@ public class JsonRuleTest {
 	public void readJsonListToManyInList(){
 		TestJson j = new TestJson();
 		j.items.add(new TestJsonListItem());
-		when(res.body()).thenReturn(g.toJson(j));
+		when(req.body()).thenReturn(g.toJson(j));
 		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
 	}
 	
 	@Test
 	public void readJsonTwoRules() {
-		when(res.body()).thenReturn(json);
+		when(req.body()).thenReturn(json);
 		rule.getConditions().put("items[0].listamount", "1");
 		rule.getConditions().put("items[0].listname", "mylistname");
 		assertTrue(rule.applyRule(req, res));
@@ -67,7 +67,7 @@ public class JsonRuleTest {
 	
 	@Test
 	public void readJsonWithBadPath() {
-		when(res.body()).thenReturn(json);
+		when(req.body()).thenReturn(json);
 		rule.getConditions().put("fail", "wewillnevergethere");
 		assertFalse(rule.applyRule(req, res));
 	}

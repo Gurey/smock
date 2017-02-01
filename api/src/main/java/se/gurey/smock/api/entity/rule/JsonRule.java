@@ -12,7 +12,6 @@ import spark.Response;
 
 public class JsonRule extends EndpointRule {
 	
-
 	public JsonRule(String response, HashMap<String, String> conditions, boolean isDefault) {
 		super(response, conditions, isDefault, RuleType.JSON);
 	}

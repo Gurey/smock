@@ -1,0 +1,6 @@
+html, body, md-sidenav-container, div.container{
+  margin: 0;
+  padding: 15px;
+  height: 100vh;
+  width: 100%;
+}
