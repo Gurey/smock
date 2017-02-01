@@ -1,11 +1,19 @@
-<h2 class="endpoint-title">Endpoint name</h2>
-<md-input-container>
-  <input md-input placeholder="Rule" value="Sushi">
-</md-input-container>
+<md-card>
+  <md-card-title>Resource name</md-card-title>
+  <md-input-container>
+    <input md-input placeholder="Rule" value="Sushi">
+  </md-input-container>
+  <md-select placeholder="Rule">
+    <md-option>XML</md-option>
+    <md-option>Json</md-option>
+    <md-option>Contains</md-option>
+  </md-select>
+  <section>
+    <pre>
+      <textarea class="json highlight">
+        {{ sampleContent }}
+      </textarea>
 
-<md-select placeholder="Rule">
-  <md-option>XML</md-option>
-  <md-option>Json</md-option>
-  <md-option>Contains</md-option>
-</md-select>
-
+    </pre>
+  </section>
+</md-card>

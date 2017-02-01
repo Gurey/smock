@@ -10,6 +10,8 @@ import { MenuComponent } from './menu/menu.component';
 import { ServiceContainerComponent } from './service-container/service-container.component';
 import { ServiceListComponent } from './service-list/service-list.component';
 import { ServiceContentComponent } from './service-content/service-content.component';
+import { SmockRouterModule } from './smock-router/smock-router.module';
+import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,13 @@ import { ServiceContentComponent } from './service-content/service-content.compo
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot()
+    MaterialModule.forRoot(),
+    SmockRouterModule,
+    HighlightJsModule
   ],
-  providers: [],
+  providers: [
+    HighlightJsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
