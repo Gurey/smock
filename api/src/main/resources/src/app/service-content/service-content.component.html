@@ -8,12 +8,5 @@
     <md-option>Json</md-option>
     <md-option>Contains</md-option>
   </md-select>
-  <section>
-    <pre>
-      <textarea class="json highlight">
-        {{ sampleContent }}
-      </textarea>
-
-    </pre>
-  </section>
+  <ace-editor [(text)]="text" #editor style="height: 300px;"></ace-editor>
 </md-card>

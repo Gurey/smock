@@ -1,5 +1,6 @@
-import {Component, OnInit, AfterViewInit, ElementRef} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ElementRef, ViewChild} from '@angular/core';
 import { HighlightJsService } from 'angular2-highlight-js';
+import { AceEditorComponent } from 'ng2-ace-editor';
 
 @Component({
   selector: 'sm-service-content',
@@ -7,7 +8,9 @@ import { HighlightJsService } from 'angular2-highlight-js';
   styleUrls: ['./service-content.component.css']
 })
 export class ServiceContentComponent implements OnInit, AfterViewInit {
+  @ViewChild('editor') editor;
 
+  public text:string = '';
   sampleContent: String = JSON.stringify({sample: 'something', number: 123})
 
   constructor(private el: ElementRef,private highlightService: HighlightJsService) { }
@@ -16,7 +19,12 @@ export class ServiceContentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    this.highlightService.highlight(this.el.nativeElement.querySelector('.json'));
+    this.editor.setTheme("eclipse");
+
+    this.editor.getEditor().setOptions({
+      enableBasicAutocompletion: true
+    });
+
   }
 
 }

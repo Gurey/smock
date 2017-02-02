@@ -12,6 +12,7 @@ import { ServiceListComponent } from './service-list/service-list.component';
 import { ServiceContentComponent } from './service-content/service-content.component';
 import { SmockRouterModule } from './smock-router/smock-router.module';
 import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
+import { AceEditorDirective, AceEditorComponent } from 'ng2-ace-editor';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,9 @@ import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
     MenuComponent,
     ServiceContainerComponent,
     ServiceListComponent,
-    ServiceContentComponent
+    ServiceContentComponent,
+    AceEditorDirective,
+    AceEditorComponent
   ],
   imports: [
     BrowserModule,
